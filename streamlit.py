@@ -184,11 +184,11 @@ def main():
                 if scan_image:
                     st.image(scan_image, caption="Scanned Image", use_container_width=True)
                     if st.session_state.image == "Passport":
-                        response = process_image(upload_image)
+                        response = process_image(scan_image)
                         final_response = process_passport(response)
                         st.write(final_response)
                     elif st.session_state.image == "NIN":
-                        response = process_image(upload_image)
+                        response = process_image(scan_image)
                         final_response = process_nin(response)
                         st.write(json(final_response))
 
