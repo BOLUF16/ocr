@@ -182,7 +182,7 @@ def main():
             elif st.session_state.scan:
                 scan_image  = st.camera_input("take a picture")
                 if scan_image:
-                    st.image(upload_image, caption="Scanned Image", use_container_width=True)
+                    st.image(scan_image, caption="Scanned Image", use_container_width=True)
                     if st.session_state.image == "Passport":
                         response = process_image(upload_image)
                         final_response = process_passport(response)
