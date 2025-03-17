@@ -4,6 +4,7 @@ import re
 import numpy as np
 import pytesseract
 import json
+import easyocr
 
 
 
@@ -18,9 +19,15 @@ def process_nin(image):
 
     nin_data = {}
     
-    extracted_text = pytesseract.image_to_string(image)
-    print(extracted_text)
-
+    reader = easyocr.Reader(['en'])
+    result = reader.readtext(image, decoder="beamsearch", text_threshold=0.1)
+    extracted_text = []
+    for (bbox, data, pro) in result:
+        extracted_text.append(data)
+        print(data)
+    # extracted_text = pytesseract.image_to_string(image)
+    # print(extracted_text)
+    extracted_text = " ".join(extracted_text)
     # Extract NIN (11 digits)
     nin_no = re.search(r'NIN:?\s*(\d{11})', extracted_text, re.IGNORECASE)
     if nin_no:
@@ -177,7 +184,7 @@ def main():
                     elif st.session_state.image == "NIN":
                         response = process_image(upload_image)
                         final_response = process_nin(response)
-                        st.write(json(final_response))
+                        st.write(final_response)
             
             elif st.session_state.scan:
                 scan_image  = st.camera_input("take a picture")
@@ -190,16 +197,7 @@ def main():
                     elif st.session_state.image == "NIN":
                         response = process_image(upload_image)
                         final_response = process_nin(response)
-                        st.write(json(final_response))
-
-        
-        # if st.session_state.scan:
-        #     image_options = ["Passport", "NIN"]
-        #     image_option = st.selectbox("Select Image Type", image_options)
-        #     if image_option:
-
-
-
+                        st.write(final_response)
 
 
 
